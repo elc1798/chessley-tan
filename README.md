@@ -12,6 +12,11 @@ of chess other than the rules. Players will train the AI to improve its skills.
 Players will be ranked based on an ELO ranking system, gaining ELO points when
 their AI defeats another player's AI in a competitive match.
 
+## Libraries Used
+
+ - Python Flask
+ - TensorFlow
+
 ## Created by
  - Ethan Cheng
  - Ishraq Bhuiyan

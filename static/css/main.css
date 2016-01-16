@@ -1,20 +1,46 @@
 body{   
     background-color:#404040
 }
-.radio-inline{
-    font-weight: bold;
-    font-size: 12px;
-    font-family: sans-serif;
+
+.left{
+    width: 50%;
+    left: 0;
+    float:left;
+    position: relative;
+    
 }
+
+.right{
+    width: 50%;
+    float: right;
+    position: relative;
+    
+}
+
 .center{
     background-color: #F0F0F0;
     text-align:center;
     height:100vh;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 32px;
+    position: relative;
+   /* z-index: -3;*/
 }
 
 .error{
     color:red;
     font-style: italic;
+}
+
+.navbar-default{
+    position: fixed;
+    top:0px;
+    margin-bottom: 20px;
+    width: 100vw;
+    z-index: 1;
+}
+
+#synopsis{
+    text-align: left;
 }

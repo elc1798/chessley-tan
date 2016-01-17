@@ -8,4 +8,4 @@ setup:
 	sudo pip install --upgrade virtualenv
 	virtualenv chessley-venv
 	echo "Installing required Python packages"
-	sh pip_install.sh
+	bash pip_install.sh

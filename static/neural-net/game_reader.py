@@ -24,13 +24,17 @@ Yields:
 def read_game(filename):
     f = open(filename)
     game = None
-    try:
-        game = chess.pgn.read_game(f)
-    except KeyboardInterrupt:
-        raise
-    except:
-        print("ERROR OCCURRED READING FROM PGN FILE. SKIPPING.")
-        continue
+    while True:
+        try:
+            game = chess.pgn.read_game(f)
+        except KeyboardInterrupt:
+            raise
+        except:
+            print("ERROR OCCURRED READING FROM PGN FILE. SKIPPING.")
+            continue
+        # Break out of loop as soon as valid game is read
+        if game is not None:
+            break
     yield game
 
 """

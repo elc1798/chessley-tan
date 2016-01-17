@@ -75,3 +75,58 @@ def board2numpyarray(b, flip=False):
         x[row * 8 + col] = piece
     return x
 
+"""
+Returns a known board state from a game as well a different move branch, with
+some metadata
+
+Params:
+    game - A PyChess format game to be parsed
+
+Returns:
+    A tuple with the following indices
+    0 : NumPy array of a board state
+    1 : NumPy array of parent board state of index 0 state
+    2 : NumPy array of state after random move applied onto index 1
+    3 : integer storing how many moves from index 1 until checkmate
+    4 : Result of game (-1/0/1 for loss/tie/win)
+"""
+def parse_game_state(game):
+    result_id = {
+        '1-0': 1,
+        '0-1': -1,
+        '1/2-1/2': 0
+    }
+    game_result = game.headers['Result']
+    if game_result not in result_id:
+        return None
+    game_result = result_id[game_result]
+    # Build board starting from the end
+    board_state = game.end()
+    # Exit if the game was incomplete
+    if not board_state.board().is_game_over():
+        return None
+    states = []
+    moves_left = 0
+    # Line below can be shortened to `while board_state:`
+    while board_state is not None: # Redundancy enforced for readability
+        # Append a tuple in the format:
+        # (num_moves_left, current_board_state, orientation)
+        states.append((moves_left, board_state, board_state.board().turn == 0))
+        board_state = board_state.parent
+        moves_left += 1
+    # Remove the initial board state since we know it's a constant and provides
+    # no learning value
+    states.pop() # or states.pop(len(states) - 1)
+    moves_left, board_state, flip = random.choice(states) # Grab a random board
+    b = board_state.board()
+    array = board2numpyarray(b, flip=flip)
+    b_parent = board_state.parent.board()
+    array_parent = board2numpyarray(b_parent, flip=(not flip))
+    if flip:
+        game_result *= -1
+    # Generate a random board by performing a random valid move :D
+    move = random.choice(list(b_parent.legal_moves))
+    b_parent.push(move)
+    array_random = board2numpyarray(b_parent, flip=flip)
+    return (array, array_parent, array_random, moves_left, game_result)
+

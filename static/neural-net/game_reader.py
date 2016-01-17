@@ -130,3 +130,40 @@ def parse_game_state(game):
     array_random = board2numpyarray(b_parent, flip=flip)
     return (array, array_parent, array_random, moves_left, game_result)
 
+"""
+Stores all games from a PGN file into a HDF5 hierarchical data format file
+
+Params:
+    fin - Filename of .pgn file for input
+    fout - Filename of output file
+
+Returns:
+    None
+"""
+def store_all_games(fin, fout):
+    outfile = h5py.File(fout, 'w')
+    # Grab and store values from the return value of parse_game_state
+    STATES = [outfile.create_dataset(x, (0, 64), dtype='b', maxshape=(None, 64),
+        chunks=True) for x in ['board', 'board_rand', 'board_parent']]
+    state_curr, state_rand, state_parent = STATES
+    METADATA = [outfile.create_dataset(x, (0,), dtype='b', maxshape=(None,),
+        chunks=True) for x in ['result', 'moves_left']]
+    res, mvs_left = METADATA
+    size = 0
+    line = 0
+    for game in read_games(fin):
+        game = parse_game_state(game)
+        if game is None:
+            continue
+        if line + 1 >= size:
+            outfile.flush()
+            size = 2 * size + 1
+            # Resize H5Py dataset
+            [x.resize(size=size, axis=0) for x in (state_curr, state_rand,
+                state_parent, res, mvs_left)]
+        state_curr[line], state_parent[line], state_rand[line], mvs_left[line], res[line] = game
+        line += 1
+    [x.resize(size=line, axis=0) for x in (state_curr, state_rand, state_parent,
+        res, mvs_left)]
+    outfile.close()
+

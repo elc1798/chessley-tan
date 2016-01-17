@@ -13,18 +13,18 @@ import random
 import h5py
 
 """
-Yields a one-time-read generator for the first game contained in a PGN file
+Yields a one-time-read generator for the games contained in a PGN file
 
 Params:
     filename - A .pgn file containing valid PGN format chess games
 
 Yields:
-    A generator containing the first game stored, None otherwise
+    A generator containing the stored games, None otherwise
 """
-def read_game(filename):
+def read_games(filename):
     f = open(filename)
-    game = None
     while True:
+        game = None
         try:
             game = chess.pgn.read_game(f)
         except KeyboardInterrupt:
@@ -32,10 +32,10 @@ def read_game(filename):
         except:
             print("ERROR OCCURRED READING FROM PGN FILE. SKIPPING.")
             continue
-        # Break out of loop as soon as valid game is read
-        if game is not None:
+        # pgn.read_game returns None if EOF is reached. Break loop on EOF
+        if game is None:
             break
-    yield game
+        yield game
 
 """
 Simple conversion (or basic "hash") function to generate unique ID for chess

@@ -1,3 +1,8 @@
+# This implementation will be using Python generators and tuples via () and
+# yield. This is because machine learning is memory intensive, and generators
+# are one-time read objects that do not store memory, hence allowing us to
+# devote more memory to the AI when training.
+
 import chess, chess.pgn
 import numpy
 import sys
@@ -46,7 +51,10 @@ Converts a PGN chess board from PythonChess library to a NumPy array
 Params:
     b - board
     flip - True to flip orientation of board (black on bottom, white on top),
-           False by default
+           False by default. Board is flipped upon each player's turn
+
+Returns:
+    A NumPy array that represents a board state
 """
 def board2numpyarray(b, flip=False):
     x = numpy.zeros(64, dtype=numpy.int8)

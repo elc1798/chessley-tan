@@ -62,3 +62,7 @@ target/
 # Python Virtual Env
 chessley-venv/
 
+# .pgn and .hdf5 game data files
+*.pgn
+*.hdf5
+

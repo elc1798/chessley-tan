@@ -74,6 +74,16 @@ def get_data(series=["board", "board_rand"]):
 
     # Define this function internally
     def stack(vectors):
+        """
+        Converts a vector value (list) into a NumPy stack
+
+        Params:
+            vectors - a list of values
+
+        Returns:
+            A vertical or horizontal NumPy stack depending on the shape of the
+            vector
+        """
         if len(vectors[0].shape) > 1:
             # Vertical stack
             return numpy.vstack(vectors)
@@ -88,4 +98,62 @@ def get_data(series=["board", "board_rand"]):
     test_size = pconst.TEST_SIZE_MAX / len(data[0])
     data = train_test_split(*data, test_size=test_size)
     return data
+
+def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=None, biases=None):
+    """
+    Returns a set of TensorFlow Variable weights and a set of TensorFlow
+    Variable biases. These are used in our training function
+
+    Notes:
+        The Hidden Layer in a neural network is an intermediary layer that
+        processes the Input Layer into the Output Layer
+
+    Params:
+        n_in - Input Layer
+        n_hidden_units - Units for the hidden layer
+        n_hidden_layers - Number of hidden layers
+        weights - Initial array of weights. If None, get_parameters will
+                  generate it
+        biases - Initial array of biases. If None, get_parameters will generate
+                 it
+
+    Returns:
+        A weight set of TensorFlow variables, and a bias set of TensorFlow
+        variables
+    """
+    if weights is None or biases is None:
+        if type(n_hidden_units) != list:
+            n_hidden_units = [n_hidden_units] * n_hidden_layers
+        else:
+            n_hidden_layers = len(n_hidden_units)
+        weights = []
+        biases = []
+
+        # Define internally
+        def weight_values(n_in, n_out):
+            return numpy.asarray(RNG.uniform(
+                low = -numpy.sqrt(6. / (n_in + n_out)),
+                high = numpy.sqrt(6. / (n_in + n_out)),
+                size = (n_in, n_out)), dtype=pconst.FLOAT_TYPE)
+
+        for i in xrange(n_hidden_layers):
+            tmp_in = n_in
+            weight = None
+            bias = None
+            if i != 0:
+                tmp_in = n_hidden_units[i - 1]
+            if i < n_hidden_layers - 1:
+                tmp_out = n_hidden_units[i]
+                weight = weight_values(tmp_in, tmp_out)
+                bias = numpy.ones(tmp_out, dtype=pconst.FLOAT_TYPE) * pconst.GAMMA
+            else:
+                weight = numpy.zeros(tmp_in, dtype=pconst.FLOAT_TYPE)
+                bias = floatX(0.)
+            weights.append(weight)
+            biases.append(bias)
+
+    weight_set = [tf.Variable(w) for w in weights]
+    bias_set = [tf.Variable(b) for b in biases]
+
+    return weight_set, bias_set
 

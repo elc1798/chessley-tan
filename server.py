@@ -6,15 +6,29 @@ app = Flask(__name__)
 @app.route("/", methods=["GET","POST"])
 @app.route("/home", methods=["GET","POST"])
 def home():
-    return render_template("home.html")
+    if request.method=="GET":
+        if 'username' in session and session['username']!=0:
+            return render_template("home.html", username=session['username'])
+        return render_template("home.html")
+    else:
+        if 'username' in session and session['username']!=0:
+            return render_template("home.html", username=session['username'])
+        return render_template("home.html")
 
 @app.route("/leaderboards", methods=["GET", "POST"])
 def leaderboards():
-    return 0
+    if request.method=="GET":
+        return render_template("leaderboards.html")
+    else:
+        if 'username' in session and session['username']!=0:
+            return render_template("leaderboards.html", username = session['username'])
+        return render_template("leaderboards.html")
 
 @app.route("/profile", methods=["GET","POST"])
 def profile():
-    return 0
+    if 'username' in session and session['username']!=0:
+        return render_template("profile.html", username=session['username'])
+    return render_template("home.html")
 
 
 if __name__ == "__main__":

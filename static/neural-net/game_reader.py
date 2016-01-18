@@ -7,10 +7,12 @@ import chess, chess.pgn
 import numpy
 import sys
 import os
+import glob
 import multiprocessing
 import itertools
 import random
 import h5py
+import PROJECT_CONSTANTS as constants
 
 """
 Yields a one-time-read generator for the games contained in a PGN file
@@ -166,4 +168,42 @@ def store_all_games(fin, fout):
     [x.resize(size=line, axis=0) for x in (state_curr, state_rand, state_parent,
         res, mvs_left)]
     outfile.close()
+
+"""
+Wrapper function for store_all_games so we can input parameters in *args style
+
+Params:
+    files - a list of 2 item tuples in the form (fin, fout) for store_all_games
+
+Returns:
+    store_all_games(files[0], files[1])
+"""
+def store_all_games_wrapper(files):
+    return store_all_games(*files)
+
+"""
+Converts all .pgn files in specified folder in PROJECT_CONSTANTS.py to .hdf5
+files. Will skip files that already have .hdf5 versions unless `force` is set to
+True
+
+Params:
+    force - True if resetting hdf5 files from original .pgn files is intended,
+            False by default
+
+Returns:
+    None
+"""
+def directory_parse_pgn2hdf5(force=False):
+    files = []
+    DIRECTORY = constants.PGN_FILE_DIRECTORY
+    for fin in glob.glob(DIRECTORY + "/*.pgn"):
+        assert(fin.endswith('.pgn'))
+        fout = fin.replace(".pgn", ".hdf5")
+        if force or not os.path.exists(fout):
+            files.append((fin, fout))
+    pool = multiprocessing.Pool()
+    pool.map(store_all_games_wrapper, files)
+
+if __name__ == "__main__":
+    directory_parse_pgn2hdf5()
 

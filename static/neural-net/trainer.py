@@ -47,6 +47,22 @@ def load_data(DIR=pconst.PGN_FILE_DIRECTORY):
             print("Failed reading file: %s" % (fin))
 
 def get_data(series=["board", "board_rand"]):
+    """
+    Retrieves data from loaded .hdf5 files from load_data(), and splits them
+    into a training set and a testing set. Returns a 2 item array object, with
+    index 0 being the training set and index 1 being the testing set
+
+    Params:
+        series - Boards to include in sets. Valid board IDs are listed in the
+                 store_all_games function in game_reader. They are:
+                    board
+                    board_rand
+                    board_parent
+                 By default, the series will contain board and board_rand
+
+    Returns:
+        2 item array object in the format [training_set, testing_set]
+    """
     data = [[] for i in xrange(len(series))]
     for f in load_data():
         try:

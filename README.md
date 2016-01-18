@@ -31,6 +31,7 @@ made some modifications and tweaks (that probably contain some unintentional
 ones).
 
 **KERAS**: https://github.com/fchollet/keras
+
 **Deep Pink Blog Post**: http://erikbern.com/2014/11/29/deep-learning-for-chess/
 
 ## Created by

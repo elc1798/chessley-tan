@@ -19,9 +19,9 @@ h<!DOCTYPE html>
 	  <a class="navbar-brand" href="home">Chessley</a>
 	</div>
 	<ul class="nav navbar-nav">
-	  <li class="active"><a href="home">Home</a></li>
+	  <li><a href="home">Home</a></li>
 	  <li><a href="login">Login</a></li>
-	  <li><a href="leaderboards">Leaderboards</a></li>
+	  <li class="active"><a href="leaderboards">Leaderboards</a></li>
 	</ul>
       </div>
     </nav>
@@ -31,7 +31,41 @@ h<!DOCTYPE html>
       </div>
       <div class="center col-sm-8"> 
 	<!-- put content here-->
-
+	<h1> Chessley Leaderboards</h1>
+	<form method="GET" action="searchboards">
+	  <input type="text" name="searched" placeholder="Search Users">
+	</form><br>
+	
+	<table class="table table-striped">
+	  <thead>
+	    <tr>
+	      <th>Rank</th>
+	      <th>Name</th>
+	      <th>Elo</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td> 1 <!-- put rank here --></td>
+	      <td> Jijiglobe <!-- put name here--></td>
+	      <td> 1400 <!-- put elo here--></td>
+	    </tr>
+	    <tr>
+	      <td> 2 <!-- put rank here --></td>
+	      <td> Ishy <!-- put name here--></td>
+	      <td> 1360 <!-- put elo here--></td>
+	    </tr>
+	    <tr>
+	      <td> 3 <!-- put rank here --></td>
+	      <td> Elc1798 <!-- put name here--></td>
+	      <td> 1200 <!-- put elo here--></td>
+	    </tr>
+	    
+	  </tbody>
+	</table>
+	
+	
+	
 	<!-- end content here-->
       </div>
       <div class="col-sm-2 edgebar">

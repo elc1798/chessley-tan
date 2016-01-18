@@ -46,3 +46,30 @@ def load_data(DIR=pconst.PGN_FILE_DIRECTORY):
         except:
             print("Failed reading file: %s" % (fin))
 
+def get_data(series=["board", "board_rand"]):
+    data = [[] for i in xrange(len(series))]
+    for f in load_data():
+        try:
+            for index, name in enumerate(series):
+                data[index].append(f[name].value)
+        except:
+            raise
+            print("Reading failed on file %s" % (f))
+
+    # Define this function internally
+    def stack(vectors):
+        if len(vectors[0].shape) > 1:
+            # Vertical stack
+            return numpy.vstack(vectors)
+        else:
+            # Horizontal stack
+            return numpy.hstack(vectors)
+
+    # Convert data from list of lists into lists of stacks
+    data = [stack(item) for item in data]
+
+    # Split the entries into a training set and a separate test set using scikit
+    test_size = pconst.TEST_SIZE_MAX / len(data[0])
+    data = train_test_split(*data, test_size=test_size)
+    return data
+

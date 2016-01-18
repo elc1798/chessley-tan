@@ -44,3 +44,11 @@ body{
 #synopsis{
     text-align: left;
 }
+
+.justify-left{
+    text-align:left;
+}
+
+.black{
+    color:#000000;
+}

@@ -56,9 +56,15 @@ docs/_build/
 # PyBuilder
 target/
 
+# Hidden Files
 *~
 \#*\#
+.*.swp
 
 # Python Virtual Env
 chessley-venv/
+
+# .pgn and .hdf5 game data files
+*.pgn
+*.hdf5
 

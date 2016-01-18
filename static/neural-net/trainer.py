@@ -157,3 +157,9 @@ def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=No
 
     return weight_set, bias_set
 
+def get_model(weight_set, bias_set, dropout=False):
+    piece_set = tf.placeholder(pconst.FLOAT_TYPE, shape=None, name="piece_set")
+    if type(dropout) != list:
+        dropout = [dropout] * len(weight_set)
+    # TODO: FINISH THIS FUNCTION
+

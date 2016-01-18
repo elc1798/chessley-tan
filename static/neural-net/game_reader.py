@@ -14,16 +14,16 @@ import random
 import h5py
 import PROJECT_CONSTANTS as constants
 
-"""
-Yields a one-time-read generator for the games contained in a PGN file
-
-Params:
-    filename - A .pgn file containing valid PGN format chess games
-
-Yields:
-    A generator containing the stored games, None otherwise
-"""
 def read_games(filename):
+    """
+    Yields a one-time-read generator for the games contained in a PGN file
+
+    Params:
+        filename - A .pgn file containing valid PGN format chess games
+
+    Yields:
+        A generator containing the stored games, None otherwise
+    """
     f = open(filename)
     while True:
         game = None
@@ -39,30 +39,30 @@ def read_games(filename):
             break
         yield game
 
-"""
-Simple conversion (or basic "hash") function to generate unique ID for chess
-pieces.
-
-Params:
-    piece_type - integer, denoting piece's chess piece type in PGN format: pawn,
-                 knight, rook, etc.
-    color - int containing piece's color
-"""
 def gen_piece_id(piece_type, color):
+    """
+    Simple conversion (or basic "hash") function to generate unique ID for chess
+    pieces.
+
+    Params:
+        piece_type - integer, denoting piece's chess piece type in PGN format: pawn,
+                     knight, rook, etc.
+        color - int containing piece's color
+    """
     return piece_type + color * 7
 
-"""
-Converts a PGN chess board from PythonChess library to a NumPy array
-
-Params:
-    b - board
-    flip - True to flip orientation of board (black on bottom, white on top),
-           False by default. Board is flipped upon each player's turn
-
-Returns:
-    A NumPy array that represents a board state
-"""
 def board2numpyarray(b, flip=False):
+    """
+    Converts a PGN chess board from PythonChess library to a NumPy array
+
+    Params:
+        b - board
+        flip - True to flip orientation of board (black on bottom, white on top),
+               False by default. Board is flipped upon each player's turn
+
+    Returns:
+        A NumPy array that represents a board state
+    """
     x = numpy.zeros(64, dtype=numpy.int8)
     for pos, piece in enumerate(b.pieces):
         if piece != 0:
@@ -77,22 +77,22 @@ def board2numpyarray(b, flip=False):
         x[row * 8 + col] = piece
     return x
 
-"""
-Returns a known board state from a game as well a different move branch, with
-some metadata
-
-Params:
-    game - A PyChess format game to be parsed
-
-Returns:
-    A tuple with the following indices
-    0 : NumPy array of a board state
-    1 : NumPy array of parent board state of index 0 state
-    2 : NumPy array of state after random move applied onto index 1
-    3 : integer storing how many moves from index 1 until checkmate
-    4 : Result of game (-1/0/1 for loss/tie/win)
-"""
 def parse_game_state(game):
+    """
+    Returns a known board state from a game as well a different move branch, with
+    some metadata
+
+    Params:
+        game - A PyChess format game to be parsed
+
+    Returns:
+        A tuple with the following indices
+        0 : NumPy array of a board state
+        1 : NumPy array of parent board state of index 0 state
+        2 : NumPy array of state after random move applied onto index 1
+        3 : integer storing how many moves from index 1 until checkmate
+        4 : Result of game (-1/0/1 for loss/tie/win)
+    """
     result_id = {
         '1-0': 1,
         '0-1': -1,
@@ -132,17 +132,17 @@ def parse_game_state(game):
     array_random = board2numpyarray(b_parent, flip=flip)
     return (array, array_parent, array_random, moves_left, game_result)
 
-"""
-Stores all games from a PGN file into a HDF5 hierarchical data format file
-
-Params:
-    fin - Filename of .pgn file for input
-    fout - Filename of output file
-
-Returns:
-    None
-"""
 def store_all_games(fin, fout):
+    """
+    Stores all games from a PGN file into a HDF5 hierarchical data format file
+
+    Params:
+        fin - Filename of .pgn file for input
+        fout - Filename of output file
+
+    Returns:
+        None
+    """
     outfile = h5py.File(fout, 'w')
     # Grab and store values from the return value of parse_game_state
     STATES = [outfile.create_dataset(x, (0, 64), dtype='b', maxshape=(None, 64),
@@ -169,31 +169,31 @@ def store_all_games(fin, fout):
         res, mvs_left)]
     outfile.close()
 
-"""
-Wrapper function for store_all_games so we can input parameters in *args style
-
-Params:
-    files - a list of 2 item tuples in the form (fin, fout) for store_all_games
-
-Returns:
-    store_all_games(files[0], files[1])
-"""
 def store_all_games_wrapper(files):
+    """
+    Wrapper function for store_all_games so we can input parameters in *args style
+
+    Params:
+        files - a list of 2 item tuples in the form (fin, fout) for store_all_games
+
+    Returns:
+        store_all_games(files[0], files[1])
+    """
     return store_all_games(*files)
 
-"""
-Converts all .pgn files in specified folder in PROJECT_CONSTANTS.py to .hdf5
-files. Will skip files that already have .hdf5 versions unless `force` is set to
-True
-
-Params:
-    force - True if resetting hdf5 files from original .pgn files is intended,
-            False by default
-
-Returns:
-    None
-"""
 def directory_parse_pgn2hdf5(force=False):
+    """
+    Converts all .pgn files in specified folder in PROJECT_CONSTANTS.py to .hdf5
+    files. Will skip files that already have .hdf5 versions unless `force` is
+    set to True
+
+    Params:
+        force - True if resetting hdf5 files from original .pgn files is intended,
+                False by default
+
+    Returns:
+        None
+    """
     files = []
     DIRECTORY = constants.PGN_FILE_DIRECTORY
     for fin in glob.glob(DIRECTORY + "/*.pgn"):

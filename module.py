@@ -18,7 +18,7 @@ def numUsers():
 def newUser(username, password):
     if len(db.users.find({'un':username})) != 0:
         return 1
-    user = {"_id":str(numUsers()+1), "un":username, "pass":password}
+    user = {"_id":str(numUsers()+1), "un":username, "pass":hashPass(password)}
     db.users.insert(user)
     return 0
 

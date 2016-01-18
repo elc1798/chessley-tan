@@ -20,8 +20,8 @@ h<!DOCTYPE html>
 	</div>
 	<ul class="nav navbar-nav">
 	  <li><a href="about">About</a></li>
-	  <li class="active"><a href="profile">Profile</a></li>
-	  <li><a href="download">Download</a></li>
+	  <li><a href="profile">Profile</a></li>
+	  <li class="active"><a href="download">Download</a></li>
 	  <li><a href="upload">Upload</a></li>
 	  <li><a href="leaderboards">Leaderboards</a></li>
 	</ul>
@@ -33,15 +33,13 @@ h<!DOCTYPE html>
       </div>
       <div class="center col-sm-8"> 
 	<!-- put content here-->
-	<h1> Jijijglobe <!-- username here--></h1><br>
-	<div class="justify-left">
-
-	  <h3>Rank: 1</h3>
-	  <h3>Elo: 1400</h3>
-	  <h3>Wins: 100</h3>
-	  <h3>Losses: 1</h3>
-	  <h3>Stalemates: 0</h3></br>
-	</div>
+	<h1> Upload Game Data</h1>
+	
+	<p class="justify-left"> To update your personal AI, upload your game logs from [some location]. This will allow your AI to learn from all the games you played against it offline.</p><br>
+	<form method="POST" action="parseUpload" class="justify-left">
+	  <input type="file" name="logs" accept=".txt">
+	  <button href="parseUpload" type="submit" class="btn btn-default">Upload</button>
+	</form>
 	<!-- end content here-->
       </div>
       <div class="col-sm-2 edgebar">

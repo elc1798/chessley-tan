@@ -157,9 +157,39 @@ def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=No
 
     return weight_set, bias_set
 
+"""
+Returns a basic Tensor model for training or testing
+
+Params:
+    weight_set - TensorFlow tensor (matrix) of weight values
+    bias_set - TensorFlow tensor (matrix) of bias values
+    dropout - If True, will remove all neurons that are below threshold
+
+Returns:
+    The input layer and output layer (TensorFlow tensor objects)
+"""
 def get_model(weight_set, bias_set, dropout=False):
-    piece_set = tf.placeholder(pconst.FLOAT_TYPE, shape=None, name="piece_set")
+    # Create an input layer to process the weights and biases
+    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=None, name="input_layer")
+    # Make a list of dropouts if not already a list
     if type(dropout) != list:
         dropout = [dropout] * len(weight_set)
-    # TODO: FINISH THIS FUNCTION
+    # Build a matrix of pieces based on the input layer
+    pieces = []
+    for piece in [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]:
+        pieces.append(tf.equal(input_layer, piece))
+    # Build the final model (output_layer) from the weights and biases
+    binary_layer = tf.concat(axis=1, pieces)
+    last_layer = binary_layer
+    n = len(weight_set)
+    for index in xrange(n - 1):
+        intermediary = tf.matmul(last_layer, weight_set[index]) + bias_set[index]
+        intermediary = intermediary * (intermediary > 0)
+        if dropout[index]:
+            mask = numpy.random.binomial(1, 0.5, shape=intermediary.get_shape())
+            intermediary = intermediary * tf.cast(mask, pconst.FLOAT_TYPE) * 2
+
+        last_layer = intermediary
+    output_layer = tf.matmul(last_layer, weight_set[-1]) + bias_set[-1]
+    return input_layer, output_layer
 

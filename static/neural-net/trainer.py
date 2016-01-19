@@ -184,12 +184,59 @@ def get_model(weight_set, bias_set, dropout=False):
     n = len(weight_set)
     for index in xrange(n - 1):
         intermediary = tf.matmul(last_layer, weight_set[index]) + bias_set[index]
-        intermediary = intermediary * (intermediary > 0)
+        intermediary = tf.mul(intermediary,
+                tf.fill(intermediary.get_shape().as_list(), intermediary > 0))
         if dropout[index]:
             mask = numpy.random.binomial(1, 0.5, shape=intermediary.get_shape())
-            intermediary = intermediary * tf.cast(mask, pconst.FLOAT_TYPE) * 2
+            intermediary = tf.mul(intermediary, tf.cast(mask, pconst.FLOAT_TYPE))
+            intermediary = tf.mul(intermediary,
+                    tf.fill(intermediary.get_shape().as_list(), 2))
 
         last_layer = intermediary
     output_layer = tf.matmul(last_layer, weight_set[-1]) + bias_set[-1]
     return input_layer, output_layer
+
+"""
+Returns the training model for our training function
+
+Params:
+    weight_set - TensorFlow tensor (matrix) of weight values
+    bias_set - TensorFlow tensor (matrix) of bias values
+    dropout - If True, will remove all neurons that are below threshold
+    multiplier - An independent variable for our training function
+    kappa - An independent variable for our training function
+
+Returns:
+    A tuple with the following indices:
+        0 - board input layer
+        1 - board rand input layer
+        2 - board parent input layer
+        3 - statistical net loss of probability of making a move
+        4 - Regularization of weights and bias
+        5 - statistical net loss of probability between current board state, and
+            after a random move
+        6 - statistical net loss of probability between current board state and
+            parent
+        7 - inverse of index 6
+"""
+def get_training_model(weight_set, bias_set, dropout=False, multiplier=10.0,kappa=1.0):
+    # Build a dual network, one for the real move, one for a fake random move
+    # Train on a negative log likelihood of classifying the right move
+    # il = input layer, ol = output layer
+    board_il, board_ol = get_model(weight_set, bias_set, dropout)
+    board_rand_il, board_rand_ol = get_model(weight_set, bias_set, dropout)
+    board_parent_il, board_parent_ol = get_model(weight_set, bias_set, dropout)
+
+    rand_diff = board_ol - board_rand_ol
+    loss_a = -tf.log(tf.nn.sigmoid(rand_diff)).mean()
+    parent_diff = kappa * (board_ol + board_parent_ol)
+    loss_b = -tf.log(tf.nn.sigmoid(parent_diff)).mean()
+    loss_c = -tf.log(tf.nn.sigmoid(-parent_diff)).mean()
+
+    # Regularization
+    reg = 0
+    for x in tf.add(weight_set, bias_set):
+        reg += multiplier * tf.square(x).mean()
+    loss_net = loss_a + loss_b + loss_c
+    return board_il, board_rand_il, board_parent_il, loss_net, reg, loss_a, loss_b, loss_c
 

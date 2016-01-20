@@ -177,15 +177,18 @@ def get_model(weight_set, bias_set, dropout=False):
     # Build a matrix of pieces based on the input layer
     pieces = []
     for piece in [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]:
-        pieces.append(tf.equal(input_layer, piece))
+        pieces.append(tf.cast(tf.equal(input_layer, piece), pconst.FLOAT_TYPE))
     # Build the final model (output_layer) from the weights and biases
-    binary_layer = tf.concat(axis=1, pieces)
+    binary_layer = tf.concat(1, pieces)
     last_layer = binary_layer
     n = len(weight_set)
     for index in xrange(n - 1):
         intermediary = tf.matmul(last_layer, weight_set[index]) + bias_set[index]
         intermediary = tf.mul(intermediary,
-                tf.fill(intermediary.get_shape().as_list(), intermediary > 0))
+                tf.fill(intermediary.get_shape().as_list(),
+                    tf.greater(intermediary,
+                        tf.zeros(intermediary.get_shape().as_list(),
+                            pconst.FLOAT_TYPE))))
         if dropout[index]:
             mask = numpy.random.binomial(1, 0.5, shape=intermediary.get_shape())
             intermediary = tf.mul(intermediary, tf.cast(mask, pconst.FLOAT_TYPE))

@@ -16,6 +16,9 @@ import PROJECT_CONSTANTS as pconst
 # God-Tier Mr. Game And Watch RNG: https://youtu.be/wOyKt13HO78?t=39s
 RNG = numpy.random
 
+# TensorFlow session variable declaration. Initialize afterwards.
+sess = None
+
 def floatX(x):
     """
     Casts a number to a numpy float32 value as an array
@@ -242,4 +245,38 @@ def get_training_model(weight_set, bias_set, dropout=False, multiplier=10.0,kapp
         reg += multiplier * tf.square(x).mean()
     loss_net = loss_a + loss_b + loss_c
     return board_il, board_rand_il, board_parent_il, loss_net, reg, loss_a, loss_b, loss_c
+
+"""
+Computes updates using Nesterov's Accelerated Gradient Descent Momentum
+Optimization algorithm
+
+Params:
+    loss - data loss
+    params - parameter to compute gradient using loss
+    learning_rate - learning rate of our neural network
+    momentum - Tensor of momentums
+
+Returns:
+    A list of tuples containing:
+        Component tensors of gradient
+        Components of 'params'
+        Components of momentum param
+        Components of velocity
+"""
+def nesterov_update(loss, params, learning_rate, momentum):
+    updates = []
+    gradients = tf.gradients(loss, params)
+    # Build the momentums from the gradients and params
+    for param_i, gradient_i in (params.eval(sess), gradients):
+        # Note that zip gives a tuple version of an iterable)
+        momentum_param = tf.Variable(numpy.asarray(param_i.eval(sess) * 0.,
+            dtype=pconst.FLOAT_TYPE))
+        sess.run(momentum_param.initializer)
+        velocity = tf.sub(tf.mul(momentum, momentum_param),
+                tf.mul(learning_rate, gradient_i))
+        weight = tf.sub(tf.add(param_i, tf.mul(momentum, velocity)),
+                tf.mul(learning_rate, gradient_i))
+        updates.append((param_i, weight))
+        updates.append((momentum_param, velocity))
+    return updates
 

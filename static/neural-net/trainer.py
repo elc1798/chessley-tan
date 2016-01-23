@@ -170,7 +170,7 @@ Returns:
 """
 def get_model(weight_set, bias_set, dropout=False):
     # Create an input layer to process the weights and biases
-    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=None, name="input_layer")
+    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=[None, 12 * 64])
     # Make a list of dropouts if not already a list
     if type(dropout) != list:
         dropout = [dropout] * len(weight_set)

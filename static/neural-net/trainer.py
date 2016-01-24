@@ -318,3 +318,57 @@ def get_function(weight_set, bias_set, dropout=False, update=False):
             updates=updates)
     return func
 
+def train(print_boards=False):
+    curr_train, curr_test, rand_train, rand_test, parent_train, parent_test = get_data(["board", "board_rand", "board_parent"])
+    if print_boards:
+        for board in [curr_train[0], parent_train[0]]:
+            for row in xrange(8):
+                print ' '.join("%d" % x for x in board[(row * 8):((row + 1) * 8)])
+            print
+
+    size = 12*64
+    hidden_units_dim = [2048] * 3
+
+    weight_set, bias_set = get_parameters(n_in=size,
+            n_hidden_units=hidden_units_dim)
+
+    BATCH_SIZE = min(pconst.TRAIN_BATCH_SIZE,
+            curr_train.get_shape().as_list()[0])
+
+    train_func = get_function(weight_set, bias_set, update=True, dropout=False)
+    test_func = get_function(weight_set, bias_set, update=False, dropout=False)
+
+    min_test_loss = float("inf") # Infinity!
+    base_learning_rate = 0.03
+    t_i = time.time() # Initial time
+
+    for i in xrange(2000):
+        learning_rate = base_learning_rate * math.exp(-(time.time() - t0) / 86400) # 8640 = # of seconds in a day
+
+        batch_index = random.randint(0, int(curr_train.get_shape().as_list()[0] / BATCH_SIZE) - 1)
+        lo = batch_index * BATCH_SIZE
+        hi = (batch_index + 1) * BATCH_SIZE
+        loss_net, reg, loss_a, loss_b, loss_c = train_func(
+                curr_train[lo:hi],
+                rand_train[lo:hi],
+                parent_train[lo:hi],
+                learning_rate)
+        # Print training info
+        print "Iteration: %4d\tLearning rate: %.4f\tLoss: %.4f\tReg: %.4f" % (i,
+                learning_rate, loss_net, reg)
+        if i % 200 == 0:
+            test_loss, test_reg, _, _, _ = test_func(curr_test, rand_test, parent_test, learning_rate)
+            if test_loss < best_test_loss:
+                print "MINIMUM LOSS: %.4" % (test_loss)
+                best_test_loss = test_loss
+
+                print "Dumping upgraded model"
+                fout = open('model.chessley', 'w')
+                def values(set_x):
+                    return [x.eval(session=sess) for x in set_x]
+                pickle.dump((values(weight_set), values(bias_set)), fout)
+                fout.close()
+
+if __name__ == "__main__":
+    train(print_boards=False)
+

@@ -12,6 +12,7 @@ import math
 import time
 
 import PROJECT_CONSTANTS as pconst
+import train_function as tfunc
 
 # God-Tier Mr. Game And Watch RNG: https://youtu.be/wOyKt13HO78?t=39s
 RNG = numpy.random

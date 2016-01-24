@@ -165,8 +165,8 @@ def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=No
 Returns a basic Tensor model for training or testing
 
 Params:
-    weight_set - TensorFlow tensor (matrix) of weight values
-    bias_set - TensorFlow tensor (matrix) of bias values
+    weight_set - list of TensorFlow tensor (matrix) of weight values
+    bias_set - list of TensorFlow tensor (matrix) of bias values
     dropout - If True, will remove all neurons that are below threshold
 
 Returns:
@@ -207,8 +207,8 @@ def get_model(weight_set, bias_set, dropout=False):
 Returns the training model for our training function
 
 Params:
-    weight_set - TensorFlow tensor (matrix) of weight values
-    bias_set - TensorFlow tensor (matrix) of bias values
+    weight_set - list of TensorFlow tensor (matrix) of weight values
+    bias_set - list of TensorFlow tensor (matrix) of bias values
     dropout - If True, will remove all neurons that are below threshold
     multiplier - An independent variable for our training function
     kappa - An independent variable for our training function
@@ -276,8 +276,7 @@ def nesterov_update(loss, params, learning_rate, momentum):
     # Build the momentums from the gradients and params
     for param_i, gradient_i in (params.eval(session=sess), gradients):
         # Note that zip gives a tuple version of an iterable)
-        momentum_param = tf.Variable(numpy.asarray(param_i.eval(session=sess) * 0.,
-            dtype=pconst.FLOAT_TYPE))
+        momentum_param = tf.Variable(floatX(param_i.eval(session=sess) * 0.))
         sess.run(momentum_param.initializer)
         velocity = tf.sub(tf.mul(momentum, momentum_param),
                 tf.mul(learning_rate, gradient_i))

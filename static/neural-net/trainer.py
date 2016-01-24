@@ -266,10 +266,16 @@ Returns:
 def nesterov_update(loss, params, learning_rate, momentum):
     updates = []
     gradients = tf.gradients(loss, params)
+    # Convert momentum into a matrix
+    if type(momentum) is not pconst.TFTENSOR_CLASS:
+        momentum = tf.fill([len(params.eval(session=sess)[0])], momentum)
+    # Convert the learning rate into a matrix
+    if type(learning_rate) is not pconst.TFTENSOR_CLASS:
+        learning_rate = tf.fill([len(params.eval(session=sess)[0])], learning_rate)
     # Build the momentums from the gradients and params
-    for param_i, gradient_i in (params.eval(sess), gradients):
+    for param_i, gradient_i in (params.eval(session=sess), gradients):
         # Note that zip gives a tuple version of an iterable)
-        momentum_param = tf.Variable(numpy.asarray(param_i.eval(sess) * 0.,
+        momentum_param = tf.Variable(numpy.asarray(param_i.eval(session=sess) * 0.,
             dtype=pconst.FLOAT_TYPE))
         sess.run(momentum_param.initializer)
         velocity = tf.sub(tf.mul(momentum, momentum_param),

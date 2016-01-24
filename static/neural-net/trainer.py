@@ -29,7 +29,7 @@ def floatX(x):
     Returns:
         x as a NumPy float32 value within a NumPy array
     """
-    return numpy.asarray(x, dtype=pconst.FLOAT_TYPE)
+    return numpy.asarray(x, dtype=pconst.NP_FLOAT)
 
 def load_data(DIR=pconst.PGN_FILE_DIRECTORY):
     """

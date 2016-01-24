@@ -25,20 +25,20 @@ def login():
     if request.method == "GET":
         return render_template("signin.html")
     else:
-        if request.form.has_key("username") and request.form.has_key("pass") and module.authenticate(request.form['username'], request.form['pass']):
+        if 'username' in request.form and 'pass' in request.form and module.authenticate(request.form['username'], request.form['pass']):
             session['authenticated'] = True
-            session['username'] = request.form('username')
+            session['username'] = request.form['username']
             return redirect(url_for('home'))
         return render_template("signin.html")
 
 @app.route("/register", methods=["POST"])
 def register():
-    if request.form.has_key("username") and request.form.has_key("pass") and request.form.has_key("pass2"):
-        if not request.form['pass'] == request.form['pass2']:
+    if 'username' in request.form and 'pass' in request.form and 'pass2' in request.form:
+        if not request.form["pass"] == request.form["pass2"]:
             return redirect(url_for('home'))
-        if module.newUser(request.form['username'], request.form['pass']):
+        if module.newUser(request.form["username"], request.form["pass"]):
             session['authenticated'] = True
-            session['username'] = request.form('username')
+            session['username'] = request.form['username']
             return redirect(url_for('home'))
     return redirect(url_for('home'))
 

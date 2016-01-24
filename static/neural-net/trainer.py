@@ -286,3 +286,35 @@ def nesterov_update(loss, params, learning_rate, momentum):
         updates.append((momentum_param, velocity))
     return updates
 
+"""
+Generate a learning function
+
+Params:
+    weight_set - list of TensorFlow tensor values for weights
+    bias_set - list of TensorFlow bias values for biases
+    dropout - If True, will drop dead or insignificant neurons
+    update - If True, will use Nesterov's momentum optimization updates
+
+Returns:
+    A function that can be called to train a data set
+"""
+def get_function(weight_set, bias_set, dropout=False, update=False):
+    # Set up variable values
+    board_il, board_rand_il, board_parent_il, loss_net, reg, loss_a, loss_b, loss_c = get_training_model(weight_set, bias_set, dropout=dropout)
+    objective = loss_net + reg
+    learning_rate = tf.placeholder(pconst.FLOAT_TYPE, shape=[])
+    momentum = floatX(0.9)
+    updates = []
+
+    if update:
+        assert(len(weight_set) == len(bias_set))
+        params = []
+        for i in xrange(len(weight_set)):
+            params.append(tf.add(weight_set[i], bias_set[i]))
+        updates = nesterov_update(objective, params, learning_rate, momentum)
+    func = tfunc.function(
+            inputs=[board_il, board_rand_il, board_parent_il, learning_rate],
+            outputs=[loss_net, reg, loss_a, loss_b, loss_c],
+            updates=updates)
+    return func
+

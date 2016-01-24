@@ -62,7 +62,7 @@ def leaderboards():
         return render_template("leaderboards.html")
     else:
         if 'username' in session and session['username']!=0:
-            return render_template("loginleaderboards.html", username = session['username'])
+            return render_template("loginleaderboards.html")
         return render_template("leaderboards.html")
 
 @app.route("/profile", methods=["GET","POST"])

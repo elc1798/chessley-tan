@@ -29,10 +29,10 @@ def newUser(username, password):
 
 ## Authenticates user
 def authenticate(username, password):
-    person = db.users.find({'un':username, 'pass':hashPass(password)})
-    for p in person:
-        return True
-    return False
+    person = db.users.find({'un': username})
+    hashPass = person[0]['pass']
+    print hashPass
+    return verify(password, hashPass)
 
 ## Hashes and returns password that is hashed and salted by 29000 rounds of pbkdf2 encryption
 def hashPass(password):

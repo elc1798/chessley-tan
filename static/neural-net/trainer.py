@@ -318,6 +318,16 @@ def get_function(weight_set, bias_set, dropout=False, update=False):
             updates=updates)
     return func
 
+"""
+Trains the model
+
+Params:
+    print_boards - If True, will print the boards that are read. Not advised for
+                   large number of boards
+
+Returns:
+    None
+"""
 def train(print_boards=False):
     curr_train, curr_test, rand_train, rand_test, parent_train, parent_test = get_data(["board", "board_rand", "board_parent"])
     if print_boards:

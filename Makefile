@@ -12,3 +12,9 @@ setup:
 	echo "Installing Git LFS"
 	./lfs/install.sh
 	git lfs pull
+
+update:
+	git pull --ff-only --rebase
+	git lfs update
+	git lfs pull
+

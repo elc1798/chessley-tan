@@ -42,6 +42,18 @@ def register():
             return redirect(url_for('home'))
     return redirect(url_for('home'))
 
+@app.route("/about")
+def about():
+    if 'username' in session:
+        return render_template("about.html", un=session['username']) # Jinja for username stuff
+    return render_template("about.html")
+
+@app.route("/download", methods=["GET", "POST"])
+def download():
+    if 'username' in session:
+        return render_template('download.html', un=session['username']) # Jinja stuff
+    return redirect(url_for('home'))
+
 @app.route("/upload", methods=["GET","POST"])
 def upload():
     if 'username' in session and session['username'] !=0:
@@ -58,12 +70,9 @@ def upload():
 
 @app.route("/leaderboards", methods=["GET", "POST"])
 def leaderboards():
-    if request.method=="GET":
-        return render_template("leaderboards.html")
-    else:
-        if 'username' in session and session['username']!=0:
-            return render_template("loginleaderboards.html")
-        return render_template("leaderboards.html")
+    if 'username' in session and session['username']!=0:
+        return render_template("loginleaderboards.html")
+    return render_template("leaderboards.html")
 
 @app.route("/profile", methods=["GET","POST"])
 def profile():

@@ -12,10 +12,14 @@ of chess other than the rules. Players will train the AI to improve its skills.
 Players will be ranked based on an ELO ranking system, gaining ELO points when
 their AI defeats another player's AI in a competitive match.
 
-## Libraries Used
+## Libraries and APIs Used
 
  - Python Flask
  - TensorFlow
+ - Python Chess
+ - SciPy
+ - Mongo
+ - Sunfish
 
 ## Sources
 
@@ -40,4 +44,18 @@ ones).
 |   Ethan Cheng   |        Deep Learning AI         |
 | Ishraq Bhuiyan  | Flask Web Application Backend   |
 | Jion Fairchild  |     HTML and CSS Frontend       |
+
+## Building
+
+Clone the project and build all dependencies:
+```
+$ git clone https://github.com/elc1798/chessley-tan
+$ cd chessley-tan
+$ make setup
+```
+
+To deploy the website, just do
+```
+INSERT GUNICORN COMMAND LINE HERE
+```
 

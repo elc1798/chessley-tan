@@ -99,7 +99,7 @@ def get_data(series=["board", "board_rand"]):
     data = [stack(item) for item in data]
 
     # Split the entries into a training set and a separate test set using scikit
-    test_size = pconst.TEST_SIZE_MAX / len(data[0])
+    test_size = len(data[0]) / 2
     data = train_test_split(*data, test_size=test_size)
     return data
 
@@ -138,7 +138,7 @@ def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=No
             return numpy.asarray(RNG.uniform(
                 low = -numpy.sqrt(6. / (n_in + n_out)),
                 high = numpy.sqrt(6. / (n_in + n_out)),
-                size = (n_in, n_out)), dtype=pconst.FLOAT_TYPE)
+                size = (n_in, n_out)), dtype=pconst.NP_FLOAT)
 
         for i in xrange(n_hidden_layers):
             tmp_in = n_in
@@ -149,15 +149,20 @@ def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=No
             if i < n_hidden_layers - 1:
                 tmp_out = n_hidden_units[i]
                 weight = weight_values(tmp_in, tmp_out)
-                bias = numpy.ones(tmp_out, dtype=pconst.FLOAT_TYPE) * pconst.GAMMA
+                bias = numpy.ones(tmp_out, dtype=pconst.NP_FLOAT) * pconst.GAMMA
             else:
-                weight = numpy.zeros(tmp_in, dtype=pconst.FLOAT_TYPE)
+                weight = numpy.zeros(tmp_in, dtype=pconst.NP_FLOAT)
                 bias = floatX(0.)
             weights.append(weight)
             biases.append(bias)
 
     weight_set = [tf.Variable(w) for w in weights]
     bias_set = [tf.Variable(b) for b in biases]
+
+    for var in weight_set:
+        sess.run(var.initializer)
+    for var in bias_set:
+        sess.run(var.initializer)
 
     return weight_set, bias_set
 
@@ -174,7 +179,7 @@ Returns:
 """
 def get_model(weight_set, bias_set, dropout=False):
     # Create an input layer to process the weights and biases
-    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=[None, 12 * 64])
+    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=[3, 64])
     # Make a list of dropouts if not already a list
     if type(dropout) != list:
         dropout = [dropout] * len(weight_set)
@@ -187,12 +192,11 @@ def get_model(weight_set, bias_set, dropout=False):
     last_layer = binary_layer
     n = len(weight_set)
     for index in xrange(n - 1):
+        print("WEIGHT SIZE: " + str(weight_set[index].get_shape().as_list()))
+        print("LAYER SIZE: " + str(last_layer.get_shape().as_list()))
         intermediary = tf.matmul(last_layer, weight_set[index]) + bias_set[index]
-        intermediary = tf.mul(intermediary,
-                tf.fill(intermediary.get_shape().as_list(),
-                    tf.greater(intermediary,
-                        tf.zeros(intermediary.get_shape().as_list(),
-                            pconst.FLOAT_TYPE))))
+        intermediary = intermediary * tf.cast((intermediary > 0),
+                pconst.FLOAT_TYPE)
         if dropout[index]:
             mask = numpy.random.binomial(1, 0.5, shape=intermediary.get_shape())
             intermediary = tf.mul(intermediary, tf.cast(mask, pconst.FLOAT_TYPE))
@@ -200,7 +204,9 @@ def get_model(weight_set, bias_set, dropout=False):
                     tf.fill(intermediary.get_shape().as_list(), 2))
 
         last_layer = intermediary
-    output_layer = tf.matmul(last_layer, weight_set[-1]) + bias_set[-1]
+    print(last_layer.get_shape().as_list())
+    print(weight_set[-1].get_shape().as_list())
+    output_layer = tf.matmul(last_layer, tf.reshape(weight_set[-1], [2048,1])) + bias_set[-1]
     return input_layer, output_layer
 
 """
@@ -235,15 +241,15 @@ def get_training_model(weight_set, bias_set, dropout=False, multiplier=10.0,kapp
     board_parent_il, board_parent_ol = get_model(weight_set, bias_set, dropout)
 
     rand_diff = board_ol - board_rand_ol
-    loss_a = -tf.log(tf.nn.sigmoid(rand_diff)).mean()
+    loss_a = -tf.reduce_mean(tf.log(tf.nn.sigmoid(rand_diff)))
     parent_diff = kappa * (board_ol + board_parent_ol)
-    loss_b = -tf.log(tf.nn.sigmoid(parent_diff)).mean()
-    loss_c = -tf.log(tf.nn.sigmoid(-parent_diff)).mean()
+    loss_b = -tf.reduce_mean(tf.log(tf.nn.sigmoid(parent_diff)))
+    loss_c = -tf.reduce_mean(tf.log(tf.nn.sigmoid(-parent_diff)))
 
     # Regularization
     reg = 0
-    for x in tf.add(weight_set, bias_set):
-        reg += multiplier * tf.square(x).mean()
+    for x in weight_set + bias_set:
+        reg += multiplier * tf.reduce_mean(tf.square(x))
     loss_net = loss_a + loss_b + loss_c
     return board_il, board_rand_il, board_parent_il, loss_net, reg, loss_a, loss_b, loss_c
 
@@ -267,21 +273,25 @@ Returns:
 def nesterov_update(loss, params, learning_rate, momentum):
     updates = []
     gradients = tf.gradients(loss, params)
+    for tensor in params:
+        try:
+            sess.run(tensor.initializer)
+        except:
+            # Print no need to initialize: not a variable
+            continue
     # Convert momentum into a matrix
     if type(momentum) is not pconst.TFTENSOR_CLASS:
-        momentum = tf.fill([len(params.eval(session=sess)[0])], momentum)
+        momentum = tf.fill(params[0].get_shape().as_list(), momentum)
     # Convert the learning rate into a matrix
     if type(learning_rate) is not pconst.TFTENSOR_CLASS:
-        learning_rate = tf.fill([len(params.eval(session=sess)[0])], learning_rate)
+        learning_rate = tf.fill(params[0].get_shape().as_list(), learning_rate)
     # Build the momentums from the gradients and params
-    for param_i, gradient_i in (params.eval(session=sess), gradients):
+    for param_i, gradient_i in zip(params, gradients):
         # Note that zip gives a tuple version of an iterable)
         momentum_param = tf.Variable(floatX(param_i.eval(session=sess) * 0.))
         sess.run(momentum_param.initializer)
-        velocity = tf.sub(tf.mul(momentum, momentum_param),
-                tf.mul(learning_rate, gradient_i))
-        weight = tf.sub(tf.add(param_i, tf.mul(momentum, velocity)),
-                tf.mul(learning_rate, gradient_i))
+        velocity = momentum * momentum_param - learning_rate * gradient_i
+        weight = param_i + momentum * velocity - learning_rate * gradient_i
         updates.append((param_i, weight))
         updates.append((momentum_param, velocity))
     return updates
@@ -343,7 +353,7 @@ def train(print_boards=False):
             n_hidden_units=hidden_units_dim)
 
     BATCH_SIZE = min(pconst.TRAIN_BATCH_SIZE,
-            curr_train.get_shape().as_list()[0])
+            curr_train.shape[0])
 
     train_func = get_function(weight_set, bias_set, update=True, dropout=False)
     test_func = get_function(weight_set, bias_set, update=False, dropout=False)
@@ -380,5 +390,7 @@ def train(print_boards=False):
                 fout.close()
 
 if __name__ == "__main__":
+    sess = tf.Session()
+    sess.run(tf.initialize_all_variables())
     train(print_boards=False)
 

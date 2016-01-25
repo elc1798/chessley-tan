@@ -17,7 +17,7 @@ def allowed_file(filename):
 @app.route("/home")
 def home():
     if 'username' in session:
-        return render_template("logintemplate.html")
+        return redirect(url_for('profile'))
     return render_template("home.html")
 
 @app.route("/login", methods=["GET","POST"])
@@ -72,9 +72,9 @@ def upload():
 @app.route("/leaderboards", methods=["GET", "POST"])
 def leaderboards():
     table = [];
-    table[0] = {"rank":1,"name":"Jijiglobe","elo":1200};
-    table[1] = {"rank":2,"name":"name2","elo":1300};
-    table[2] = {"rank":3,"name":"name3","elo":1400};
+    table.append({"rank":1,"name":"Jijiglobe","elo":1200})
+    table.append({"rank":2,"name":"name2","elo":1300})
+    table.append({"rank":3,"name":"name3","elo":1400})
     if 'username' in session and session['username']!=0:
         return render_template("loginleaderboards.html", table=table)
     return render_template("leaderboards.html", table=table)
@@ -83,8 +83,8 @@ def leaderboards():
 def profile():
     if 'username' in session and session['username']!=0:
         #retrieve user data here
-
-        dict = {"rank":1,"elo":1400,"wins":100,"losses":50,"stalemates":0}
+        dict = module.getUser(session['username'])
+        #dict = {"rank":1,"elo":1400,"wins":100,"losses":50,"stalemates":0}
         return render_template("profile.html", username=session['username'],dict=dict)
     return render_template("home.html")
 

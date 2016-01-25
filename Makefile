@@ -3,12 +3,14 @@ run: chessley-venv/bin/activate
 	python app.py
 
 setup:
+	echo "Installing required packages for Ubuntu 14.04"
+	./SETUP_FILES/apt_install.sh
 	pwd
 	echo "Building Chessley Python Virtual Environment"
 	sudo pip install --upgrade virtualenv
 	virtualenv chessley-venv
 	echo "Installing required Python packages"
-	bash pip_install.sh
+	./SETUP_FILES/pip_install.sh
 	echo "Installing Git LFS"
 	./lfs/install.sh
 	git lfs pull

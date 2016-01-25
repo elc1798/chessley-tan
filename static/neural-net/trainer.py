@@ -17,8 +17,9 @@ import train_function as tfunc
 # God-Tier Mr. Game And Watch RNG: https://youtu.be/wOyKt13HO78?t=39s
 RNG = numpy.random
 
-# TensorFlow session variable declaration. Initialize afterwards.
-sess = None
+# TensorFlow session
+sess = tf.Session()
+sess.run(tf.initialize_all_variables())
 
 def floatX(x):
     """
@@ -394,7 +395,6 @@ def train(print_boards=False):
                 fout.close()
 
 if __name__ == "__main__":
-    sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
     train(print_boards=False)
+    sess.close()
 

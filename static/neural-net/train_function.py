@@ -19,7 +19,7 @@ class Function(object):
         names = [value.name for value in self.inputs]
         feed_dict = dict(zip(names, inputs))
         updated = self.session.run(self.outputs + self.updates, feed_dict=feed_dict)
-        return update[:len(self.outputs)]
+        return updated[:len(self.outputs)]
 
 def function(inputs, outputs, updates=[], session=None):
     return Function(inputs, outputs, updates=updates, session=session)

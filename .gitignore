@@ -68,3 +68,4 @@ chessley-venv/
 *.pgn
 *.hdf5
 
+*.chessley

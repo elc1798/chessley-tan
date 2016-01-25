@@ -17,8 +17,9 @@ import train_function as tfunc
 # God-Tier Mr. Game And Watch RNG: https://youtu.be/wOyKt13HO78?t=39s
 RNG = numpy.random
 
-# TensorFlow session variable declaration. Initialize afterwards.
-sess = None
+# TensorFlow session
+sess = tf.Session()
+sess.run(tf.initialize_all_variables())
 
 def floatX(x):
     """
@@ -180,7 +181,7 @@ Returns:
 """
 def get_model(weight_set, bias_set, dropout=False):
     # Create an input layer to process the weights and biases
-    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=[3, 64])
+    input_layer = tf.placeholder(pconst.FLOAT_TYPE, shape=[24, 64])
     # Make a list of dropouts if not already a list
     if type(dropout) != list:
         dropout = [dropout] * len(weight_set)
@@ -365,7 +366,7 @@ def train(print_boards=False):
     base_learning_rate = 0.03
     t_i = time.time() # Initial time
 
-    for i in xrange(2000):
+    for i in xrange(10):
         learning_rate = base_learning_rate * math.exp(-(time.time() - t_i) / 86400) # 8640 = # of seconds in a day
 
         batch_index = random.randint(0, int(curr_train.shape[0] / BATCH_SIZE) - 1)
@@ -380,10 +381,11 @@ def train(print_boards=False):
         print "Iteration: %4d\tLearning rate: %.4f\tLoss: %.4f\tReg: %.4f" % (i,
                 learning_rate, loss_net, reg)
         if i % 200 == 0:
-            test_loss, test_reg, _, _, _ = test_func(curr_test, rand_test, parent_test, learning_rate)
-            if test_loss < best_test_loss:
-                print "MINIMUM LOSS: %.4" % (test_loss)
-                best_test_loss = test_loss
+            test_loss, test_reg, _, _, _ = test_func([curr_test, rand_test,
+                    parent_test, learning_rate])
+            if test_loss < min_test_loss:
+                print "MINIMUM LOSS: %.4f" % (test_loss)
+                min_test_loss = test_loss
 
                 print "Dumping upgraded model"
                 fout = open('model.chessley', 'w')
@@ -393,7 +395,6 @@ def train(print_boards=False):
                 fout.close()
 
 if __name__ == "__main__":
-    sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
     train(print_boards=False)
+    sess.close()
 

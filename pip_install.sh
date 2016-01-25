@@ -6,6 +6,14 @@ sudo apt-get install libhdf5-dev libhdf5-serial-dev
 sudo apt-get install gfortran libopenblas-dev liblapack-dev
 sudo update-alternatives --set libblas.so.3 /usr/lib/atlas-base/atlas/libblas.so.3
 sudo update-alternatives --set liblapack.so.3 /usr/lib/atlas-base/atlas/liblapack.so.3
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+sudo apt-get update -y
+sudo apt-get install -y mongodb-org
+
 source `pwd`/chessley-venv/bin/activate
+pip install --upgrade --no-use-wheel --no-cache-dir pip
 pip install --upgrade --no-use-wheel --no-cache-dir flask python-chess scipy scikit-learn h5py
+pip install --upgrade --no-use-wheel --no-cache-dir passlib pymongo
 pip install --upgrade --no-use-wheel --no-cache-dir https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.6.0-cp27-none-linux_x86_64.whl

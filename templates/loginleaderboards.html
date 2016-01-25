@@ -49,9 +49,9 @@ h<!DOCTYPE html>
 	  <tbody>
 	    {% for user in table %}
 	    <tr>
-	      <td> user["rank"] <!-- put rank here --></td>
-	      <td> user["name" <!-- put name here--></td>
-	      <td> user["elo"] <!-- put elo here--></td>
+	      <td> {{user["rank"]}} <!-- put rank here --></td>
+	      <td> {{user["name"]}} <!-- put name here--></td>
+	      <td> {{user["elo"]}} <!-- put elo here--></td>
 	    </tr>
 	    {% endfor %}
 	    

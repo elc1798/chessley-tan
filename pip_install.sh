@@ -7,5 +7,7 @@ sudo apt-get install gfortran libopenblas-dev liblapack-dev
 sudo update-alternatives --set libblas.so.3 /usr/lib/atlas-base/atlas/libblas.so.3
 sudo update-alternatives --set liblapack.so.3 /usr/lib/atlas-base/atlas/liblapack.so.3
 source `pwd`/chessley-venv/bin/activate
+pip install --upgrade --no-use-wheel --no-cache-dir pip
 pip install --upgrade --no-use-wheel --no-cache-dir flask python-chess scipy scikit-learn h5py
+pip install --upgrade --no-use-wheel --no-cache-dir passlib
 pip install --upgrade --no-use-wheel --no-cache-dir https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.6.0-cp27-none-linux_x86_64.whl

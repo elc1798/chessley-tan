@@ -62,3 +62,5 @@ $ gunicorn -w 4 -b 0.0.0.0:5000 wsgi_handler:app
 To access the site, access your IP address or website on port 5000. The port can
 be changed to suit your needs.
 
+Our version is hosted at `http://vocab.csproject.org:5000`
+

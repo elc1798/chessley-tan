@@ -5,11 +5,11 @@ from werkzeug import secure_filename
 
 app = Flask(__name__)
 
-##Configure upload locations
+# Configure upload locations
 app.config['UPLOAD_FOLDER'] = 'uploads/'
-app.config['ALLOWED_EXTENSIONS'] = set(['txt'])
+app.config['ALLOWED_EXTENSIONS'] = set(['txt']) # Change this to whatever filetype
 
-##Checks if uploaded file is a valid file
+# Checks if uploaded file is a valid file
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.',1)[1] in app.config['ALLOWED_EXTENSIONS']
 
@@ -54,16 +54,17 @@ def download():
         return render_template('download.html', un=session['username']) # Jinja stuff
     return redirect(url_for('home'))
 
+# Uploads the file to the upload folder with the format of USER_bot.ext
 @app.route("/upload", methods=["GET","POST"])
 def upload():
     if 'username' in session and session['username'] !=0:
         if request.method=="GET":
             return render_template("upload.html")
         else:
-            file = request.files['logs']
+            file = request.files['upload_bot']
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username'] + '_bot.ext'))
                 return redirect(url_for('profile'))
     else:
         return redirect(url_for('home'))

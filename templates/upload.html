@@ -36,9 +36,9 @@ h<!DOCTYPE html>
       <h1> Upload Game Data</h1>
 
       <p class="justify-left"> To update your personal AI, upload your game logs from [some location]. This will allow your AI to learn from all the games you played against it offline.</p><br>
-      <form method="POST" action="parseUpload" class="justify-left">
-        <input type="file" name="logs" accept=".txt">
-        <button href="parseUpload" type="submit" class="btn btn-default">Upload</button>
+      <form method="POST" action="upload" class="justify-left" enctype="multipart/form-data">
+        <input type="file" name="upload_bot">
+        <button type="submit" class="btn btn-default">Upload</button>
       </form>
       <!-- end content here-->
     </div>

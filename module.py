@@ -2,11 +2,8 @@ from passlib.hash import pbkdf2_sha256
 import pymongo
 from pymongo import MongoClient
 
-##Run to create databases and collections
 connection = MongoClient()
 db = connection.database
-#db.createCollection('users')
-#db.createCollection('bots')
 
 def numUsers():
     profiles = db.users.find()
@@ -21,23 +18,23 @@ def userExists(username):
         return True
     return false
 
-## Adds a new user to the profile
+# Adds a new user to the profile
 def newUser(username, password):
     user = {"_id":str(numUsers()+1), 'un':username, 'pass':hashPass(password)}
     db.users.insert(user)
     return True
 
-## Authenticates user
+# Authenticates user
 def authenticate(username, password):
     person = db.users.find({'un': username})
     hashPass = person[0]['pass']
     print hashPass
     return verify(password, hashPass)
 
-## Hashes and returns password that is hashed and salted by 29000 rounds of pbkdf2 encryption
+# Hashes and returns password that is hashed and salted by 29000 rounds of pbkdf2 encryption
 def hashPass(password):
     return pbkdf2_sha256.encrypt(password)
 
-## Returns true if password hashes into hashpass, false otherwise
+# Returns true if password hashes into hashpass, false otherwise
 def verify(password, hashpass):
     return pbkdf2_sha256.verify(password,hashpass)

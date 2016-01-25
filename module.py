@@ -25,14 +25,43 @@ def newUser(username, password):
     return True
 
 # Updates the ranks based upon ELO
+# O(god) but I'm kinda tired rn --Jion
 def updateRanks():
+    for user1 in db.users:
+        user1["rank"] = 0
+        for user2 in db.users:
+            if(user1["elo"]<user2["elo"]):
+                user1["rank"]+=1
     return True
 
 # Updates the win/losses/draws of player and then changes their ELO, with a successive call to updateRanks()
-# score is an integer of either 1(win), 0(draw), or -1(loss) and updates the database likewise, user is the username
-def updateScore(score, user):
+# score is an integer of either 1(win), 0(draw), or -1(loss) and updates the database likewise, user1 is the username
+# user2 is the user that user1 played against
+# This function should be called once per game and score is relative to user1
+def updateScore(score, user1, user2):
+    user1 = db.users[user1]
+    user2 = db.users[user2]
+    elo1 = user1["elo"]
+    elo2 = user2["elo"]
+    delta = int(elo1)+int(elo2)
     # Stuff to update the score
-    # Stuff to change ELO
+    if(score == 1):
+        user1["wins"] = str(int(user1["wins"])+1)
+        user2["losses"] = str(int(user1["losses"])+1)
+        
+        user1["elo"] += delta/2
+        user2["elo"] -= delta/2
+    elif(score == -1):
+        user2["wins"] = str(int(user1["wins"])+1)
+        user1["losses"] = str(int(user1["losses"])+1) 
+        
+        user2["elo"] += delta/2
+        user1["elo"] -= delta/2
+    else:
+        user1["draws"] = str(int(user1["draws"])+1)
+        user2["draws"] = str(int(user1["draws"])+1)
+        
+    #update ranks
     return updateRanks()
 
 # Returns the dictionary of the player except for the password

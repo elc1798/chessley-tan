@@ -78,10 +78,7 @@ def upload():
 @app.route("/leaderboards", methods=["GET", "POST"])
 @app.route("/leaderboards/", methods=["GET", "POST"])
 def leaderboards():
-    table = [];
-    table.append({"rank":1,"name":"Jijiglobe","elo":1200})
-    table.append({"rank":2,"name":"name2","elo":1300})
-    table.append({"rank":3,"name":"name3","elo":1400})
+    table = module.getRankedUsers()
     if 'username' in session and session['username']!=0:
         return render_template("loginleaderboards.html", table=table)
     return render_template("leaderboards.html", table=table)

@@ -1,5 +1,6 @@
 import os
 import tensorflow as tf
+import numpy
 
 PGN_FILE_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + "/game-files"
 TRAIN_BATCH_SIZE = 2000

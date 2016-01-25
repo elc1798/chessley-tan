@@ -64,7 +64,11 @@ def board2numpyarray(b, flip=False):
         A NumPy array that represents a board state
     """
     x = numpy.zeros(64, dtype=numpy.int8)
-    for pos, piece in enumerate(b.pieces):
+    for pos in xrange(64):
+        curr_piece = b.piece_at(pos)
+        if curr_piece is None:
+            continue
+        piece = curr_piece.piece_type
         if piece != 0:
             color = int(bool(b.occupied_co[chess.BLACK] & chess.BB_SQUARES[pos]))
             col = int(pos % 8)
@@ -153,7 +157,10 @@ def store_all_games(fin, fout):
     res, mvs_left = METADATA
     size = 0
     line = 0
+    GAME_NUM = 1
     for game in read_games(fin):
+        print("Parsing game %d" % (GAME_NUM))
+        GAME_NUM += 1
         game = parse_game_state(game)
         if game is None:
             continue
@@ -168,18 +175,6 @@ def store_all_games(fin, fout):
     [x.resize(size=line, axis=0) for x in (state_curr, state_rand, state_parent,
         res, mvs_left)]
     outfile.close()
-
-def store_all_games_wrapper(files):
-    """
-    Wrapper function for store_all_games so we can input parameters in *args style
-
-    Params:
-        files - a list of 2 item tuples in the form (fin, fout) for store_all_games
-
-    Returns:
-        store_all_games(files[0], files[1])
-    """
-    return store_all_games(*files)
 
 def directory_parse_pgn2hdf5(force=False):
     """
@@ -201,8 +196,8 @@ def directory_parse_pgn2hdf5(force=False):
         fout = fin.replace(".pgn", ".hdf5")
         if force or not os.path.exists(fout):
             files.append((fin, fout))
-    pool = multiprocessing.Pool()
-    pool.map(store_all_games_wrapper, files)
+    for f in files:
+        store_all_games(f[0], f[1])
 
 if __name__ == "__main__":
     directory_parse_pgn2hdf5()

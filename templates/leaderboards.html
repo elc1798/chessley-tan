@@ -45,21 +45,13 @@ h<!DOCTYPE html>
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <td> 1 <!-- put rank here --></td>
-	      <td> Jijiglobe <!-- put name here--></td>
-	      <td> 1400 <!-- put elo here--></td>
-	    </tr>
-	    <tr>
-	      <td> 2 <!-- put rank here --></td>
-	      <td> Ishy <!-- put name here--></td>
-	      <td> 1360 <!-- put elo here--></td>
-	    </tr>
-	    <tr>
-	      <td> 3 <!-- put rank here --></td>
-	      <td> Elc1798 <!-- put name here--></td>
-	      <td> 1200 <!-- put elo here--></td>
-	    </tr>
+	    {% for user in table %}
+            <tr>
+              <td> user["rank"] <!-- put rank here --></td>
+              <td> user["name" <!-- put name here--></td>
+              <td> user["elo"] <!-- put elo here--></td>
+            </tr>
+            {% endfor %}
 	    
 	  </tbody>
 	</table>

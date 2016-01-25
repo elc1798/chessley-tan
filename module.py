@@ -46,7 +46,7 @@ def authenticate(username, password):
         hashPass = person[0]['pass']
     except:
         return False
-    print hashPass
+    #print hashPass
     return verify(password, hashPass)
 
 # Hashes and returns password that is hashed and salted by 29000 rounds of pbkdf2 encryption

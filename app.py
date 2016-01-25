@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Configure upload locations
 app.config['UPLOAD_FOLDER'] = 'uploads/'
-app.config['ALLOWED_EXTENSIONS'] = set(['txt']) # Change this to whatever filetype to accept
+app.config['ALLOWED_EXTENSIONS'] = set(['chessley']) # Change this to whatever filetype to accept
 
 # Checks if uploaded file is a valid file
 def allowed_file(filename):
@@ -70,7 +70,7 @@ def upload():
             file = request.files['upload_bot']
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username'] + '_bot.ext'))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], session['username'] + '_bot.chessley'))
                 return redirect(url_for('profile'))
     else:
         return redirect(url_for('home'))

@@ -15,12 +15,14 @@ def allowed_file(filename):
 
 @app.route("/")
 @app.route("/home")
+@app.route("/home/")
 def home():
     if 'username' in session:
         return redirect(url_for('profile'))
     return render_template("home.html")
 
 @app.route("/login", methods=["GET","POST"])
+@app.route("/login/", methods=["GET","POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
@@ -32,6 +34,7 @@ def login():
         return render_template("login.html")
 
 @app.route("/register", methods=["POST"])
+@app.route("/register/", methods=["POST"])
 def register():
     if 'username' in request.form and 'pass' in request.form and 'pass2' in request.form:
         if not request.form["pass"] == request.form["pass2"]:
@@ -43,12 +46,14 @@ def register():
     return redirect(url_for('home'))
 
 @app.route("/about")
+@app.route("/about/")
 def about():
     if 'username' in session:
         return render_template("about.html", un=session['username']) # Jinja for username stuff
     return render_template("about.html")
 
 @app.route("/download", methods=["GET", "POST"])
+@app.route("/download/", methods=["GET", "POST"])
 def download():
     if 'username' in session:
         return render_template('download.html', un=session['username']) # For when the Jinja is configured
@@ -56,6 +61,7 @@ def download():
 
 # Uploads the file to the upload folder with the format of USER_bot.ext
 @app.route("/upload", methods=["GET","POST"])
+@app.route("/upload/", methods=["GET","POST"])
 def upload():
     if 'username' in session and session['username'] !=0:
         if request.method=="GET":
@@ -70,6 +76,7 @@ def upload():
         return redirect(url_for('home'))
 
 @app.route("/leaderboards", methods=["GET", "POST"])
+@app.route("/leaderboards/", methods=["GET", "POST"])
 def leaderboards():
     table = [];
     table.append({"rank":1,"name":"Jijiglobe","elo":1200})
@@ -80,6 +87,7 @@ def leaderboards():
     return render_template("leaderboards.html", table=table)
 
 @app.route("/profile", methods=["GET","POST"])
+@app.route("/profile/", methods=["GET","POST"])
 def profile():
     if 'username' in session and session['username']!=0:
         #retrieve user data here

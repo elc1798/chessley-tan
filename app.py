@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Configure upload locations
 app.config['UPLOAD_FOLDER'] = 'uploads/'
-app.config['ALLOWED_EXTENSIONS'] = set(['txt']) # Change this to whatever filetype
+app.config['ALLOWED_EXTENSIONS'] = set(['txt']) # Change this to whatever filetype to accept
 
 # Checks if uploaded file is a valid file
 def allowed_file(filename):
@@ -51,7 +51,7 @@ def about():
 @app.route("/download", methods=["GET", "POST"])
 def download():
     if 'username' in session:
-        return render_template('download.html', un=session['username']) # Jinja stuff
+        return render_template('download.html', un=session['username']) # For when the Jinja is configured
     return redirect(url_for('home'))
 
 # Uploads the file to the upload folder with the format of USER_bot.ext

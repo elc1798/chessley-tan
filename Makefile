@@ -9,3 +9,6 @@ setup:
 	virtualenv chessley-venv
 	echo "Installing required Python packages"
 	bash pip_install.sh
+	echo "Installing Git LFS"
+	./lfs/install.sh
+	git lfs pull

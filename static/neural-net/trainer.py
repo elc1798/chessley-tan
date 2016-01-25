@@ -159,6 +159,7 @@ def get_parameters(n_in=None, n_hidden_units=2048, n_hidden_layers=1, weights=No
     weight_set = [tf.Variable(w) for w in weights]
     bias_set = [tf.Variable(b) for b in biases]
 
+    # We have to explicitily tell the session to initialize the TF Variables
     for var in weight_set:
         sess.run(var.initializer)
     for var in bias_set:
@@ -192,8 +193,6 @@ def get_model(weight_set, bias_set, dropout=False):
     last_layer = binary_layer
     n = len(weight_set)
     for index in xrange(n - 1):
-        print("WEIGHT SIZE: " + str(weight_set[index].get_shape().as_list()))
-        print("LAYER SIZE: " + str(last_layer.get_shape().as_list()))
         intermediary = tf.matmul(last_layer, weight_set[index]) + bias_set[index]
         intermediary = intermediary * tf.cast((intermediary > 0),
                 pconst.FLOAT_TYPE)
@@ -204,8 +203,6 @@ def get_model(weight_set, bias_set, dropout=False):
                     tf.fill(intermediary.get_shape().as_list(), 2))
 
         last_layer = intermediary
-    print(last_layer.get_shape().as_list())
-    print(weight_set[-1].get_shape().as_list())
     output_layer = tf.matmul(last_layer, tf.reshape(weight_set[-1], [2048,1])) + bias_set[-1]
     return input_layer, output_layer
 
@@ -288,10 +285,15 @@ def nesterov_update(loss, params, learning_rate, momentum):
     # Build the momentums from the gradients and params
     for param_i, gradient_i in zip(params, gradients):
         # Note that zip gives a tuple version of an iterable)
-        momentum_param = tf.Variable(floatX(param_i.eval(session=sess) * 0.))
-        sess.run(momentum_param.initializer)
+        if gradient_i is None:
+            gradient_i = 0
+        momentum_param = tf.zeros(momentum.get_shape().as_list(), pconst.FLOAT_TYPE)
         velocity = momentum * momentum_param - learning_rate * gradient_i
-        weight = param_i + momentum * velocity - learning_rate * gradient_i
+        weight = momentum * velocity - learning_rate * gradient_i
+        if param_i.get_shape().as_list() == [768, 2048]:
+            weight = weight + param_i
+        else:
+            weight = tf.pad(weight, [[0, 2048 - 768], [0, 0]]) + param_i
         updates.append((param_i, weight))
         updates.append((momentum_param, velocity))
     return updates
@@ -325,7 +327,8 @@ def get_function(weight_set, bias_set, dropout=False, update=False):
     func = tfunc.function(
             inputs=[board_il, board_rand_il, board_parent_il, learning_rate],
             outputs=[loss_net, reg, loss_a, loss_b, loss_c],
-            updates=updates)
+            updates=updates,
+            session=sess)
     return func
 
 """
@@ -363,16 +366,16 @@ def train(print_boards=False):
     t_i = time.time() # Initial time
 
     for i in xrange(2000):
-        learning_rate = base_learning_rate * math.exp(-(time.time() - t0) / 86400) # 8640 = # of seconds in a day
+        learning_rate = base_learning_rate * math.exp(-(time.time() - t_i) / 86400) # 8640 = # of seconds in a day
 
-        batch_index = random.randint(0, int(curr_train.get_shape().as_list()[0] / BATCH_SIZE) - 1)
+        batch_index = random.randint(0, int(curr_train.shape[0] / BATCH_SIZE) - 1)
         lo = batch_index * BATCH_SIZE
         hi = (batch_index + 1) * BATCH_SIZE
-        loss_net, reg, loss_a, loss_b, loss_c = train_func(
+        loss_net, reg, loss_a, loss_b, loss_c = train_func([
                 curr_train[lo:hi],
                 rand_train[lo:hi],
                 parent_train[lo:hi],
-                learning_rate)
+                learning_rate])
         # Print training info
         print "Iteration: %4d\tLearning rate: %.4f\tLoss: %.4f\tReg: %.4f" % (i,
                 learning_rate, loss_net, reg)

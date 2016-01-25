@@ -161,6 +161,8 @@ def store_all_games(fin, fout):
     for game in read_games(fin):
         print("Parsing game %d" % (GAME_NUM))
         GAME_NUM += 1
+        if GAME_NUM > 200:
+            break
         game = parse_game_state(game)
         if game is None:
             continue

@@ -76,14 +76,14 @@ def leaderboards():
     table[1] = {"rank":2,"name":"name2","elo":1300};
     table[2] = {"rank":3,"name":"name3","elo":1400};
     if 'username' in session and session['username']!=0:
-        return render_template("loginleaderboards.html" table=table)
-    return render_template("leaderboards.html" table=table)
+        return render_template("loginleaderboards.html", table=table)
+    return render_template("leaderboards.html", table=table)
 
 @app.route("/profile", methods=["GET","POST"])
 def profile():
     if 'username' in session and session['username']!=0:
         #retrieve user data here
-        
+
         dict = {"rank":1,"elo":1400,"wins":100,"losses":50,"stalemates":0}
         return render_template("profile.html", username=session['username'],dict=dict)
     return render_template("home.html")

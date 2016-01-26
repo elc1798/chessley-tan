@@ -1,79 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-    <title>Chessley</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 
-  </head>
-  <body>
-    <nav>
-      <div class="nav-wrapper">
-        <a class="brand-logo right" href="/home">Chessley</a>
-        <ul class="left hide-on-med-and-down">
-          <li class="active"><a href="/home">Home</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/leaderboards">Leaderboards</a></li>
-        </ul>
-      </div>
-    </nav>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+  <title>Chessley</title>
 
-    <div class="container">
-      <div class="col s4 push-s2">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">Who is Chessley?</span>
-            <p>Chessley is a baby. And you are his teacher. Train Chessley to play chess by playing
-            against him, and pit him up against other Chessley's trained by other people</p>
-          </div>
+</head>
+
+<body>
+  <nav>
+    <div class="navbar-fixed blue-grey darken-4">
+      <a class="brand-logo right" href="/home">
+        <img class="responsive-img circle" src="/static/icon.png"></img>
+      </a>
+      <ul class="left hide-on-med-and-down">
+        <li class="active"><a href="/home">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/leaderboards">Leaderboards</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="z-depth-3 col s4 push-s2">
+      <div class="card blue-grey darken-3">
+        <div class="card-content white-text">
+          <span class="card-title">Who is Chessley?</span>
+          <p>Chessley is a baby. And you are his teacher. Train Chessley to play chess by playing against him, and pit him up against other Chessley's trained by other people</p>
         </div>
-      </div>
-      <div class="col s4 push-s2">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">A TensorFlow Neural Network</span>
-            <p>Chessley is a modified TensorFlow port of <a href="https://github.com/erikbern/deep-pink">Deep Pink</a></p>
-            He is a deep learning artifical intelligence that learns to play chess from playing against you
-          </div>
-        </div>
-      </div>
-      <div class="col s4 push-s2">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">Sign Up Below, for Your Own AI</span>
-          </div>
-        </div>
-      </div>
-      <div class="col s4 push-s2">
-        <form method="POST" action="/register/" class="col s12">
-          <div class="row">
-            <div class="input-field col s6">
-              <input id="username" name="username" type="text" class="validate">
-              <label for="username">Username</label>
-            </div>
-            <div class="input-field col s6">
-              <input type="password" id="pass" name="pass">
-              <label for="pass">Password</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s6">
-              <input id="email" type="email" class="validate">
-              <label for="email">Email</label>
-            </div>
-            <div class="input-field col s6">
-              <input type="password" id="pass2" name="pass2">
-              <label for="pass2">Confirm Password</label>
-            </div>
-          </div>
-	  <button class="btn waves-effect waves-light" href="/register/" type="submit" name="/register">Submit</button>
-        </form>
       </div>
     </div>
-  </body>
+    <div class="z-depth-2 col s4 push-s2">
+      <div class="card blue-grey darken-2">
+        <div class="card-content white-text">
+          <span class="card-title">A TensorFlow Neural Network</span>
+          <p>Chessley is a modified TensorFlow port of <a href="https://github.com/erikbern/deep-pink">Deep Pink</a></p>
+          He is a deep learning artifical intelligence that learns to play chess from playing against you
+        </div>
+      </div>
+    </div>
+    <div class="z-depth-1 col s4 push-s2">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Sign Up Below, for Your Own AI</span>
+        </div>
+      </div>
+    </div>
+    <div class="row z-depth-2 col s4 push-s2">
+      <form method="POST" action="/register/" class="col s12">
+        <div class="center blue-grey-text darken-3-text row">
+          <h2>Register</h2>
+        </div>
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="username" name="username" type="text" class="validate">
+            <label for="username">Username</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="password" id="pass" name="pass">
+            <label for="pass">Password</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="email" type="email" class="validate">
+            <label for="email">Email</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="password" id="pass2" name="pass2">
+            <label for="pass2">Confirm Password</label>
+          </div>
+        </div>
+        <div class="row center">
+          <button class="btn waves-effect waves-light" href="/register/" type="submit">Submit
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
 </html>

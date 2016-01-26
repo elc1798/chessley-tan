@@ -1,47 +1,72 @@
-h<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
 
-    <link rel="stylesheet" href="/static/css/main.css">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+  <title>Chessley Sign In</title>
 
-    <title>Sign In</title>
+</head>
 
-  </head>
-  <body>
-    <!-- navbar-->
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/home">Chessley</a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li><a href="/home">Home</a></li>
-          <li class="active"><a href="/login">Login</a></li>
-          <li><a href="/leaderboards">Leaderboards</a></li>
-        </ul>
+<body>
+  <!-- navbar-->
+  <nav>
+    <div class="navbar-fixed blue-grey darken-4">
+      <a class="brand-logo right" href="/home">
+        <img class="responsive-img circle" src="/static/icon.png"></img>
+      </a>
+      <ul class="left hide-on-med-and-down">
+        <li><a href="/home">Home</a></li>
+        <li class="active"><a href="/login">Login</a></li>
+        <li><a href="/leaderboards">Leaderboards</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="login-page" class="row valign-wrapper">
+      <div class="col s12 z-depth-6 card-panel valign">
+        <form method="POST">
+          <div class="row">
+            <div class="input-field col s12 center">
+              <h3 class="center login-form-text">Log In to Chessley</h3>
+            </div>
+          </div>
+          <div class="row margin">
+            <div class="input-field col s12">
+              <i class="mdi-social-person-outline prefix"></i>
+              <input id="username" type="text" name="username">
+              <label for="username" class="center-align">Username</label>
+            </div>
+          </div>
+          <div class="row margin">
+            <div class="input-field col s12">
+              <i class="mdi-action-lock-outline prefix"></i>
+              <input id="pass" type="password" name="pass">
+              <label for="pass">Password</label>
+            </div>
+          </div>
+          <div class="row center">
+            <div class="input-field">
+              <button type="submit" class="btn waves-effect waves-light">Log In
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+          </div>
+          <div class="row center">
+            <a href="/home/">Register Now!</a>
+          </div>
+        </form>
       </div>
-    </nav>
+    </div>
+  </div>
 
-    <div class="container-fluid">
-      <div class="col-sm-2 edgebar" >
-      </div>
-        <div class="center col-sm-8">
-          <!-- body here-->
-          <h1> Log In To Chessley </h1>
-          <form method="POST">
-            <input type="text" name="username" placeholder="Username"><br>
-            <input type="password" name="pass" placeholder="Password"><br>
-            <button type="submit" class="btn btn-default">Log In</button>
-          </form>
-          <!--body ends here-->
-        </div>
-        <div class="col-sm-2 edgebar">
-        </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</body>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  </body>
 </html>

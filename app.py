@@ -76,6 +76,13 @@ def login():
             return redirect(url_for("profile"))
     return render_template("login.html")
 
+@app.route("/logout")
+@app.route("/logout/")
+@redirect_if_logged_in
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
 @app.route("/register", methods=["POST"])
 @app.route("/register/", methods=["POST"])
 @redirect_if_logged_in

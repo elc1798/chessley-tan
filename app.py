@@ -13,6 +13,15 @@ app.config['ALLOWED_EXTENSIONS'] = set(['chessley']) # Change this to whatever f
 
 # Checks if uploaded file is a valid file
 def allowed_file(filename):
+    """
+    Checks if 'filename' is allowed to be uploaded to the server
+
+    Params:
+        filename - String containing the name of the uploaded file
+
+    Returns:
+        True if the file is allowed, False otherwise
+    """
     return '.' in filename and filename.rsplit('.',1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 # Wraps for login requirements on certain app.routes
@@ -42,6 +51,8 @@ def redirect_if_logged_in(f):
             return redirect(url_for("profile"))
         return f(*args, **kwargs)
     return decorated_function
+
+############### APPLICATION SITE ROUTES  ###############
 
 @app.route("/")
 @app.route("/home")

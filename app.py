@@ -78,7 +78,7 @@ def login():
 
 @app.route("/logout")
 @app.route("/logout/")
-@redirect_if_logged_in
+@login_required
 def logout():
     session.clear()
     return redirect(url_for("login"))

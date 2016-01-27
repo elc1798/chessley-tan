@@ -1,49 +1,57 @@
-h<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
 
-    <link rel="stylesheet" href="/static/css/main.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Welcome to Chessley</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 
-  </head>
-  <body>
-    <!-- navbar
-      Add/change as necessary-->
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="/about">Chessley</a>
-          </div>
-          <ul class="nav navbar-nav">
-            <li><a href="/about">About</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li class="active"><a href="/download">Download</a></li>
-            <li><a href="/upload">Upload</a></li>
-            <li><a href="/leaderboards">Leaderboards</a></li>
-          </ul>
-        </div>
-      </nav>
-      <!-- navbar ends here-->
-      <div class="container-fluid">
-        <div class="col-sm-2 edgebar" > 
-        </div>
-          <div class="center col-sm-8"> 
-            <!-- put content here-->
-            <h1> Download and train Chessley</h1>
-            <p class="justify-left"> To train Chessley, you must first download the app. You will be able to play chess games against him, teach him your secret techniques, and upload your new and improved Chessley to compete against others.</p>
-            <a href="/static/builds/linux_build.zip" target="_blank"><button type="button" class="btn
-                btn-default">Download For Linux</button></a>
-            <a href="/static/builds/mac_osx_build.zip" target="_blank"><button type="button" class="btn
-                btn-default">Download for OSX</button></a>
-            <!-- end content here-->
-          </div>
-          <div class="col-sm-2 edgebar">
-          </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+  <title>Chessley - {{ USERNAME }}</title>
 
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  </body>
+</head>
+
+<body>
+  <nav>
+    <div class="navbar-fixed blue-grey darken-4">
+      <a class="brand-logo right" href="/home">
+        <img class="responsive-img circle" src="/static/icon.png"></img>
+      </a>
+      <ul class="left hide-on-med-and-down">
+        <li class="active"><a href="/profile">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/leaderboards">Leaderboards</a></li>
+        <li><a href="/download">Download</a></li>
+        <li><a href="/upload">Upload</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="center col-sm-8">
+      <!-- put content here-->
+      <h1> Download and train Chessley</h1>
+      <p class="justify-left"> To train Chessley, you must first download the app. You will be able to play chess games against him, teach him your secret techniques, and upload your new and improved Chessley to compete against others.</p>
+      <a href="/static/builds/linux_build.zip" target="_blank">
+        <button type="button" class="btn waves-effect waves-light">Download For Linux
+            <i class="material-icons right">get_app</i>
+        </button>
+      </a>
+      <a href="/static/builds/mac_osx_build.zip" target="_blank">
+        <button type="button" class="btn waves-effect waves-light">Download For OSX
+            <i class="material-icons right">get_app</i>
+        </button>
+      </a>
+      <!-- end content here-->
+    </div>
+    <div class="col-sm-2 edgebar">
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</body>
+
 </html>

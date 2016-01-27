@@ -1,52 +1,72 @@
-h<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
 
-    <link rel="stylesheet" href="/static/css/main.css">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Welcome to Chessley</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
 
-  </head>
-  <body>
-    <!-- navbar
-      Add/change as necessary-->
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="/about">Chessley</a>
-          </div>
-          <ul class="nav navbar-nav">
-            <li><a href="/about">About</a></li>
-            <li class="active"><a href="/profile">Profile</a></li>
-            <li><a href="/download">Download</a></li>
-            <li><a href="/upload">Upload</a></li>
-            <li><a href="/leaderboards">Leaderboards</a></li>
-          </ul>
-        </div>
-      </nav>
-      <!-- navbar ends here-->
-      <div class="container-fluid">
-        <div class="col-sm-2 edgebar" >
-        </div>
-          <div class="center col-sm-8">
-            <!-- put content here-->
-            <h1> {{username}} <!-- username here--></h1><br>
-            <div class="justify-left">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+  <title>Chessley - {{ USERNAME }}</title>
 
-              <h3>Rank: {{dict["rank"]}}</h3>
-              <h3>Elo: {{dict["elo"]}}</h3>
-              <h3>Wins: {{dict["wins"]}}</h3>
-              <h3>Losses: {{dict["losses"]}}</h3>
-              <h3>Stalemates: {{dict["draws"]}}</h3></br>
-            </div>
-            <!-- end content here-->
-          </div>
-          <div class="col-sm-2 edgebar">
-          </div>
+</head>
 
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  </body>
+<body>
+  <nav>
+    <div class="navbar-fixed blue-grey darken-4">
+      <a class="brand-logo right" href="/home">
+        <img class="responsive-img circle" src="/static/icon.png"></img>
+      </a>
+      <ul class="left hide-on-med-and-down">
+        <li class="active"><a href="/profile">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/leaderboards">Leaderboards</a></li>
+        <li><a href="/download">Download</a></li>
+        <li><a href="/upload">Upload</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- navbar ends here-->
+  <div class="container-fluid">
+    <div class="col-sm-2 edgebar">
+    </div>
+    <div class="center col-sm-8">
+      <!-- put content here-->
+      <h3> Welcome {{ USERNAME }} <!-- username here--></h3>
+      <br>
+      <table class="centered responsive-table">
+        <thead>
+          <tr>
+            <th data-field="id">Rank</th>
+            <th data-field="name">Elo</th>
+            <th data-field="price">Wins</th>
+            <th data-field="price">Losses</th>
+            <th data-field="price">Stalemates</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>{{ DICT["rank"] }}</td>
+            <td>{{ DICT["elo"] }}</td>
+            <td>{{ DICT["wins"] }}</td>
+            <td>{{ DICT["losses"] }}</td>
+            <td>{{ DICT["draws"] }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- end content here-->
+    </div>
+    <div class="col-sm-2 edgebar">
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</body>
+
 </html>

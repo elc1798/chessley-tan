@@ -138,7 +138,7 @@ def profile():
         #retrieve user data here
         dict = module.getUser(session['username'])
         #dict = {"rank":1,"elo":1400,"wins":100,"losses":50,"stalemates":0}
-        return render_template("profile.html", username=session['username'],dict=dict)
+        return render_template("profile.html", USERNAME=session['username'], DICT=dict)
     return render_template("home.html")
 
 if __name__ == "__main__":

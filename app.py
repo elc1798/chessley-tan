@@ -141,7 +141,8 @@ def profile():
         return render_template("profile.html", USERNAME=session['username'], DICT=dict)
     return render_template("home.html")
 
+app.secret_key = str(os.urandom(24))
+
 if __name__ == "__main__":
     app.debug = True
-    app.secret_key = str(os.urandom(24))
     app.run(host="0.0.0.0", port=5000)

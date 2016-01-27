@@ -103,7 +103,8 @@ def register():
 @app.route("/about")
 @app.route("/about/")
 def about():
-    return render_template("about.html")
+    LOGGED_IN = "authenticated" in session and session["authenticated"]
+    return render_template("about.html", AUTH=LOGGED_IN)
 
 @app.route("/download", methods=["GET", "POST"])
 @app.route("/download/", methods=["GET", "POST"])

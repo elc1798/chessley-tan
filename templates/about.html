@@ -17,19 +17,37 @@
 
 <body>
   <!-- navbar Add/change as necessary-->
-  <nav>
-    <div class="navbar-fixed blue-grey darken-4">
-      <a class="brand-logo right" href="/home">
-        <img class="responsive-img circle" src="/static/icon.png"></img>
-      </a>
-      <ul class="left hide-on-med-and-down">
-        <li><a href="/home">Home</a></li>
-        <li class="active"><a href="/about">About</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/leaderboards">Leaderboards</a></li>
-      </ul>
-    </div>
-  </nav>
+  {% if AUTH %}
+    <nav>
+      <div class="navbar-fixed blue-grey darken-4">
+        <a class="brand-logo right" href="/home">
+          <img class="responsive-img circle" src="/static/icon.png"></img>
+        </a>
+        <ul class="left hide-on-med-and-down">
+          <li><a href="/profile">Home</a></li>
+          <li class="active"><a href="/about">About</a></li>
+          <li><a href="/leaderboards">Leaderboards</a></li>
+          <li><a href="/download">Download</a></li>
+          <li><a href="/upload">Upload</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+  {% else %}
+    <nav>
+      <div class="navbar-fixed blue-grey darken-4">
+        <a class="brand-logo right" href="/home">
+          <img class="responsive-img circle" src="/static/icon.png"></img>
+        </a>
+        <ul class="left hide-on-med-and-down">
+          <li><a href="/home">Home</a></li>
+          <li class="active"><a href="/about">About</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/leaderboards">Leaderboards</a></li>
+        </ul>
+      </div>
+    </nav>
+  {% endif %}
   <!-- navbar ends here-->
   <div class="container grey-text text-darken-3">
     <div class="center">

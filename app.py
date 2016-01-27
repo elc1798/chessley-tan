@@ -126,8 +126,9 @@ def upload():
 @app.route("/leaderboards", methods=["GET", "POST"])
 @app.route("/leaderboards/", methods=["GET", "POST"])
 def leaderboards():
+    LOGGED_IN = "authenticated" in session and session["authenticated"]
     table = module.getRankedUsers()
-    return render_template("leaderboards.html", table=table)
+    return render_template("leaderboards.html", table=table, AUTH=LOGGED_IN)
 
 @app.route("/profile", methods=["GET","POST"])
 @app.route("/profile/", methods=["GET","POST"])

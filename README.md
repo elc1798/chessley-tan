@@ -64,3 +64,7 @@ be changed to suit your needs.
 
 Our version is hosted at `http://vocab.csproject.org:5000`
 
+## Video Demo
+
+See: https://youtu.be/_JT_NjR5Ovw
+
